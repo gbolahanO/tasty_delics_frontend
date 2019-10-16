@@ -1,10 +1,39 @@
-import React, { Component } from 'react';
+import React from 'react';
+import { useQuery } from '@apollo/react-hooks';
+import { gql } from 'apollo-boost';
+
 import Layout from './Layout';
 
-class Food extends Component {
+const GET_FOODS = gql`
+{
+  foods{
+    id
+    title
+    description
+    category{
+      title
+      description
+    }
+  }
+}
+`;
 
-  render() {
+const Food = () => {
+  const { loading, error, data } = useQuery(GET_FOODS);
+  console.log(data);
+  if (loading) return <p>Loading...</p>;
+  if (error) return <p>Error :(</p>;
+
+  const da = data.map(({ title, description }) => {
     return (
+      <tr>
+        <td>{title}</td>
+        <td>{description}</td>
+      </tr>
+    )
+  })
+
+  return (
       <Layout>
         <div className="row">
           <div className="col-lg-12 mt-5">
@@ -42,23 +71,12 @@ class Food extends Component {
                 <table className="table table-striped">
                   <thead>
                     <tr>
-                      <th>ORDERID</th>
-                      <th>NAME</th>
-                      <th>ITEMS</th>
-                      <th>STATUS</th>
-                      <th>AMOUNT</th>
-                      <th>DELIVERY ADDRESS</th>
+                      <th>Title</th>
+                      <th>Description</th>
                     </tr>
                   </thead>
                   <tbody>
-                    <tr>
-                      <td>Breakfast</td>
-                      <td>A slice of happiness</td>
-                      <td>Breakfast</td>
-                      <td>A slice of happiness</td>
-                      <td>Breakfast</td>
-                      <td>A slice of happiness</td>
-                    </tr>
+                    {da}
                   </tbody>
                 </table>
               </div>
@@ -67,7 +85,6 @@ class Food extends Component {
         </div>
       </Layout>
      );
-  }
 }
 
 export default Food;
