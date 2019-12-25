@@ -1,9 +1,43 @@
-import React, { Component } from 'react';
+import React from 'react';
+import { useQuery } from '@apollo/react-hooks';
+import { gql } from 'apollo-boost';
 import Layout from './Layout';
 
-class Orders extends Component {
+const GET_ORDERS = gql`
+{
+  orders {
+    id
+    orderId
+    user{
+      name
+    }
+    food{
+      title
+    }
+    order_status
+    order_amount
+    delivery_address
+  }
+}
+`;
 
-  render() {
+const Orders = () => {
+  const { loading, error, data } = useQuery(GET_ORDERS);
+  if (loading) return <p>Loading...</p>;
+  if (error) return <p>Error :((</p>;
+
+  const ordersData = data.orders.map((order) => {
+    return (
+      <tr key={order.id}>
+        <td>{order.orderId}</td>
+        <td>{order.food.title}</td>
+        <td>{order.order_status}</td>
+        <td>{order.order_amount}</td>
+        <td>{order.delivery_address}</td>
+      </tr>
+    )
+  })
+
     return (
       <Layout>
         <div className="row">
@@ -18,21 +52,13 @@ class Orders extends Component {
                     <tr>
                       <th>ORDERID</th>
                       <th>NAME</th>
-                      <th>ITEMS</th>
                       <th>STATUS</th>
                       <th>AMOUNT</th>
                       <th>DELIVERY ADDRESS</th>
                     </tr>
                   </thead>
                   <tbody>
-                    <tr>
-                      <td>Breakfast</td>
-                      <td>A slice of happiness</td>
-                      <td>Breakfast</td>
-                      <td>A slice of happiness</td>
-                      <td>Breakfast</td>
-                      <td>A slice of happiness</td>
-                    </tr>
+                    {ordersData}
                   </tbody>
                 </table>
               </div>
@@ -41,7 +67,7 @@ class Orders extends Component {
         </div>
       </Layout>
      );
-  }
+
 }
 
 export default Orders;

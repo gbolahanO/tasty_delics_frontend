@@ -1,9 +1,36 @@
-import React, { Component } from 'react';
+import React from 'react';
+import { useQuery } from '@apollo/react-hooks';
+import { gql } from 'apollo-boost';
+
 import Layout from './Layout';
 
-class Orders extends Component {
+const GET_USERS = gql`
+{
+  users{
+    id
+    name
+    email
+    phone
+    delivery_address
+  }
+}
+`;
 
-  render() {
+const Users = () => {
+  const { loading, error, data } = useQuery(GET_USERS);
+  if (loading) return <p>Loading...</p>;
+  if (error) return <p>Error...</p>;
+
+  const userData = data.users.map(user => {
+    return (
+      <tr key={user.id}>
+        <td>{user.name}</td>
+        <td>{user.email}</td>
+        <td>{user.phone}</td>
+        <td>{user.delivery_address}</td>
+      </tr>
+    )
+  })
     return (
       <Layout>
         <div className="row">
@@ -23,12 +50,7 @@ class Orders extends Component {
                     </tr>
                   </thead>
                   <tbody>
-                    <tr>
-                      <td>Breakfast</td>
-                      <td>A slice of happiness</td>
-                      <td>Breakfast</td>
-                      <td>A slice of happiness</td>
-                    </tr>
+                    {userData}
                   </tbody>
                 </table>
               </div>
@@ -37,7 +59,6 @@ class Orders extends Component {
         </div>
       </Layout>
      );
-  }
 }
 
-export default Orders;
+export default Users;

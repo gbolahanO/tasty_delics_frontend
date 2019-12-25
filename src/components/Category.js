@@ -1,9 +1,33 @@
-import React, { Component } from 'react';
+import React from 'react';
+import { useQuery } from '@apollo/react-hooks';
+import { gql } from 'apollo-boost';
+
 import Layout from './Layout';
 
-class Category extends Component {
+const GET_CATEGORIES = gql`
+{
+  categories{
+    id
+    title
+    description
+  }
+}
+`;
 
-  render() {
+const Category = () => {
+
+  const { loading, error, data } = useQuery(GET_CATEGORIES);
+  if (loading) return <p>Loading...</p>;
+  if (error) return <p>Error...</p>;
+
+  const categoryData = data.categories.map(({id, title, description }) => {
+    return (
+      <tr key={id}>
+        <td>{title}</td>
+        <td>{description}</td>
+      </tr>
+    )
+  })
     return (
       <Layout>
         <div className="row">
@@ -44,14 +68,7 @@ class Category extends Component {
                     </tr>
                   </thead>
                   <tbody>
-                    <tr>
-                      <td>Breakfast</td>
-                      <td>A slice of happiness</td>
-                    </tr>
-                    <tr>
-                      <td>Breakfast</td>
-                      <td>A slice of happiness</td>
-                    </tr>
+                    {categoryData}
                   </tbody>
                 </table>
               </div>
@@ -60,7 +77,7 @@ class Category extends Component {
         </div>
       </Layout>
      );
-  }
+
 }
 
 export default Category;

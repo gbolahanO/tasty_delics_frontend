@@ -6,7 +6,7 @@ import { ApolloProvider } from '@apollo/react-hooks';
 import Routes from './Routes';
 
 const client = new ApolloClient({
-  url: 'http://localhost:4000/',
+  uri: 'http://localhost:4000/',
   request: operation => {
     operation.setContext({
       headers: {

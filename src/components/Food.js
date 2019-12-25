@@ -20,13 +20,12 @@ const GET_FOODS = gql`
 
 const Food = () => {
   const { loading, error, data } = useQuery(GET_FOODS);
-  console.log(data);
   if (loading) return <p>Loading...</p>;
-  if (error) return <p>Error :(</p>;
+  if (error) return <p>Error :((</p>;
 
-  const da = data.map(({ title, description }) => {
+  const foodData = data.foods.map(({ id, title, description }) => {
     return (
-      <tr>
+      <tr key={id}>
         <td>{title}</td>
         <td>{description}</td>
       </tr>
@@ -76,7 +75,7 @@ const Food = () => {
                     </tr>
                   </thead>
                   <tbody>
-                    {da}
+                    {foodData}
                   </tbody>
                 </table>
               </div>
