@@ -4,7 +4,7 @@ import { gql } from 'apollo-boost';
 import Layout from './Layout';
 
 const GET_ORDERS = gql`
-{
+query get_orders {
   orders {
     id
     orderId
